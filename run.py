@@ -20,7 +20,7 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
-    return render_template("index.html", page_title="Shop Online")
+    return render_template("index.html" , listings = mongo.db.listingsAndReviews.find())
 
 
 @app.route('/about')
