@@ -35,6 +35,7 @@
 					</div>
 					
 				</div>
+             
 				<!-- Advance Search -->
 				<div class="advance-search">
 						<div class="container">
@@ -42,26 +43,32 @@
 								<div class="col-lg-12 col-md-12 align-content-center">
 										<form>
 											<div class="form-row">
+                                            <div class="form-group col-md-3">
+													<select class="w-100 form-control mt-lg-1 mt-md-2">
+														   <option value="" disabled selected>Choose property type</option>
+                                                            {% for list in listings %}
+                                                             <option value="{{list.property_type}}">{{list.property_type}}</option>
+                                                            {% endfor %}
+                                                            </select>
+												</div>
                                                 <div class="form-group col-md-3">
 													<select id="listingsAndReviews" class="w-100 form-control mt-lg-1 mt-md-2 property_type">
-														
-                                                            <option value="" disabled selected>Choose Category</option>
-                                                            {% for list in listingsAndReviews %}
-                                                                <option value="{{list.property_type}}">{{list.property_type}}</option>
+														 
+                                                            <option value="" disabled selected>Choose Country</option>
+                                                            {% for list in listings %}
+                                                             <option value="{{list.address.country}}">{{list.address.country}}</option>
                                                             {% endfor %}
                                                             </select>
 
 												</div>
+												
 												<div class="form-group col-md-3">
-													<select class="w-100 form-control mt-lg-1 mt-md-2">
-														<option>property type</option>
-														<option value="1">House</option>
-														<option value="2">Apartment</option>
-														<option value="4">Condominium</option>
-													</select>
-												</div>
-												<div class="form-group col-md-3">
-													<input type="text" class="form-control my-2 my-lg-1" id="inputLocation4" placeholder="Location">
+														<select class="w-100 form-control mt-lg-1 mt-md-2">
+														   <option value="" disabled selected>Choose Suburb </option>
+                                                            {% for list in listings %}
+                                                             <option value="{{list.address.suburb}}">{{list.address.suburb}}</option>
+                                                            {% endfor %}
+                                                            </select>
 												</div>
 												<div class="form-group col-md-2 align-self-center">
 													<button type="submit" class="btn btn-primary">Search Now</button>
