@@ -41,13 +41,17 @@
 						<div class="container">
 							<div class="row justify-content-center">
 								<div class="col-lg-12 col-md-12 align-content-center">
-										<form>
+										<form action="{{url_for('index')}}">
 											<div class="form-row">
                                             <div class="form-group col-md-3">
-													<select class="w-100 form-control mt-lg-1 mt-md-2">
-														   <option value="" disabled selected>Choose property type</option>
+													<select name="property_type" class="w-100 form-control mt-lg-1 mt-md-2">
+                                                        <option value="" disabled selected>Choose property type</option>
                                                             {% for list in listings %}
-                                                             <option value="{{list.property_type}}">{{list.property_type}}</option>
+                                                                {% if list.property_type not in new_list %}
+                                                                    <option value="{{list.property_type}}">{{list.property_type}}</option>
+                                                                    {{ new_list.append(list.property_type) }}
+                                                                    {% print(new_list) %}
+                                                                {% endif %}
                                                             {% endfor %}
                                                             </select>
 												</div>
@@ -56,7 +60,11 @@
 														 
                                                             <option value="" disabled selected>Choose Country</option>
                                                             {% for list in listings %}
-                                                             <option value="{{list.address.country}}">{{list.address.country}}</option>
+                                                                {% if list.address.country not in new_country %}
+                                                                    <option value="{{list.address.country}}">{{list.address.country}}</option>
+                                                                    {{ new_list.append(list.address.country) }}
+                                                                    {% print(new_country) %}
+                                                                {% endif %}
                                                             {% endfor %}
                                                             </select>
 
@@ -65,8 +73,12 @@
 												<div class="form-group col-md-3">
 														<select class="w-100 form-control mt-lg-1 mt-md-2">
 														   <option value="" disabled selected>Choose Suburb </option>
-                                                            {% for list in listings %}
-                                                             <option value="{{list.address.suburb}}">{{list.address.suburb}}</option>
+                                                           {% for list in listings %}
+                                                                {% if list.address.suburb not in new_suburb %}
+                                                                    <option value="{{list.address.suburb}}">{{list.address.suburb}}</option>
+                                                                    {{ new_list.append(list.address.suburb) }}
+                                                                    {% print(new_suburb) %}
+                                                                {% endif %}
                                                             {% endfor %}
                                                             </select>
 												</div>

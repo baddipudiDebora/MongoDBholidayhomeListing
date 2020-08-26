@@ -20,7 +20,8 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
-    return render_template("index.html" , listings = mongo.db.listingsAndReviews.find())
+    
+    return render_template("index.html" , listings = mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], new_suburb=[])
 
 
 @app.route('/about')
@@ -33,16 +34,37 @@ def contact():
     return render_template("contact-us.html", page_title="Shop Online")
 
 
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    listingsAndReviews = mongo.db.listingsAndReviews.find()
-    print(listingsAndReviews)
-    return render_template("login.html", page_title="Shop Online")
+    if request.method == 'POST':
+        users = mongo.db.users
+        login_user = users.find_one({'name' : request.form['username']})
+        if login_user:
+                if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']:
+                    session['username'] = request.form['username']
+                return redirect(url_for('home'))
+        return 'Invalid username/password combination'
+    return render_template('login.html')
 
-
-@app.route('/register')
+@app.route('/register', methods=['POST', 'GET'])
 def register():
-    return render_template("register.html", page_title="register")
+    if request.method == 'POST':
+        users = mongo.db.users
+        existing_user = users.find_one({'name' : request.form['username']})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
+            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            session['username'] = request.form['username']
+            return redirect(url_for('index'))
+        
+        return 'That username already exists!'
+
+    return render_template('register.html')
+    
+@app.route('/home')
+def home():
+    return render_template("home.html", page_title="Start shopping")
 
 
 @app.route('/get_property_type')
