@@ -3,7 +3,7 @@
 <body class="body-wrapper">
   <section class="ad-post bg-gray py-5">
     <div class="container">
-      <form action="{{ url_for('addlisting') }}" method="POST" >
+      <form action="{{ url_for('adlistingform') }}" method="POST" >
         <!-- Post Your ad start -->
         <fieldset class="border border-gary p-4 mb-5">
           <div class="row">
@@ -14,13 +14,13 @@
               <h6 class="font-weight-bold pt-4 pb-1">Property Name:</h6>
               <input
                 type="text"
-                name="property_name"
+                name="name"
                 class="border w-100 p-2 bg-white text-capitalize"
                 placeholder="Property title go There"
               />
               <h6 class="font-weight-bold pt-4 pb-1">Summary:</h6>
               <textarea
-                name="property-summary"
+                name="summary"
                 id=""
                 class="border p-3 w-100"
                 rows="7"
@@ -32,7 +32,7 @@
                     <h6 class="font-weight-bold pt-4 pb-1">Room Type:</h6>
                     <input
                       type="text"
-                      name="property_room_type"
+                      name="room_type"
                       class="border w-100 p-2 bg-white"
                       placeholder="Property room type"
                     />
@@ -43,7 +43,7 @@
                     </h6>
                     <input
                       type="number"
-                      name="property_accommodates"
+                      name="accommodates"
                       class="border w-100 p-2 bg-white"
                       placeholder="Property can accomodate?"
                     />
@@ -53,24 +53,17 @@
             </div>
             <div class="col-lg-6">
               <h6 class="font-weight-bold pt-4 pb-1">Choose property type:</h6>
-              <select
+                <input
+                type="text"
                 name="property_type"
-                class="w-100 form-control mt-lg-1 mt-md-2 bg-white"
-              >
-                <option value="" disabled selected>Property type</option>
-                {% for list in listings %} {% if list.property_type not in
-                new_list %}
-                <option value="{{list.property_type}}">
-                  {{list.property_type}}</option
-                >
-                {{ new_list.append(list.property_type) }} {% print(new_list) %}
-                {% endif %} {% endfor %}
-              </select>
+                class="border w-100 p-2 bg-white text-capitalize"
+                placeholder="Property title go There"
+              />
               <div>
                 <h6 class="font-weight-bold pt-4 pb-1">Listing URL</h6>
                 <input
                   type="url"
-                  name="property_listing_utl"
+                  name="listing_url"
                   class="border w-100 p-2 bg-white"
                   placeholder="Listing URL goes here"
                 />
@@ -81,7 +74,7 @@
                   <h6 class="font-weight-bold pt-4 pb-1">Minimun Nights:</h6>
                   <input
                     type="number"
-                    name="property_minimum_nights"
+                    name="minimum_nights"
                     class="border w-100 p-2 bg-white"
                     placeholder="Property title go There"
                   />
@@ -92,69 +85,18 @@
                   </h6>
                   <input
                     type="number"
-                    name="property_price"
+                    name="price "
                     class="border w-100 p-2 bg-white"
                     placeholder="Property Price per Night goes here"
                   />
                 </div>
-         
 
-              <div class="row px-12">
-                <div class="col-lg-12">
-                  <div>
-                    <h6 class="font-weight-bold pt-4 pb-1">
-                      Image of Location:
-                    </h6>
-                    <input
-                      type="image"
-                      name="property_images_picture_url"
-                      class="border w-100 p-2 bg-white"
-                      placeholder="Property image location"
-                    />
-                  </div>
-                  <div>
-                    <h6 class="font-weight-bold pt-4 pb-1">
-                      review scores
-                    </h6>
-                    <input
-                      type="number"
-                      name="property_review_scores"
-                      class="border w-100 p-2 bg-white"
-                      placeholder="Property Price per Night goes here"
-                    />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </fieldset>
         <!-- Post Your ad end -->
 
-        <!-- seller-information start -->
-        <fieldset class="border p-4 my-5 seller-information bg-gray">
-          <div class="row">
-            <div class="col-lg-12">
-              <h3>Host Information</h3>
-            </div>
-            <div class="col-lg-6">
-              <h6 class="font-weight-bold pt-4 pb-1">Contact Name:</h6>
-              <input
-                type="text"
-                name="property_host_name"
-                placeholder="Host name"
-                class="border w-100 p-2"
-              />
-              <h6 class="font-weight-bold pt-4 pb-1">Country Name:</h6>
-              <input
-                type="text"
-                name="property_host_location"
-                placeholder="Country Name"
-                class="border w-100 p-2"
-              />
-            </div>
-          </div>
-        </fieldset>
-        <!-- seller-information end-->
+       
 
         <!-- submit button -->
         <div class="checkbox d-inline-flex">

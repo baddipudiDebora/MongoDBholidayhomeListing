@@ -42,7 +42,7 @@ def login():
         if login_user:
             if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']:
                 session['username'] = request.form['username']
-                return redirect(url_for('home'))
+                return redirect(url_for('viewlisting'))
         return 'Invalid username/password combination'
     return render_template('login.html')
 
@@ -64,11 +64,6 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/home')
-def home():
-    return render_template("ad-list-view.html", page_title="Start shopping")
-
-
 @app.route('/get_property_type')
 def get_property_type():
     return render_template('get_property_type.html',
@@ -77,9 +72,13 @@ def get_property_type():
 
 @app.route('/addlisting')
 def addlisting():
-    listings=mongo.db.listingsAndReviews.find()
+    return render_template("Ad-listing.html", listings=mongo.db.listingsAndReviews.find(),new_list=[])
+
+@app.route('/adlistingform', methods=['POST'])
+def adlistingform():
+    listings=mongo.db.listingsAndReviews
     listings.insert_one(request.form.to_dict())
-    return render_template("Ad-listing.html", new_list=[])
+    return redirect(url_for('viewlisting'))
 
 
 @app.route('/viewlisting')
