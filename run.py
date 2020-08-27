@@ -73,7 +73,7 @@ def get_property_type():
 
 @app.route('/addlisting')
 def addlisting():
-    return render_template("Ad-listing.html", page_title="Add Listing")
+    return render_template("Ad-listing.html", listings = mongo.db.listingsAndReviews.find(),new_list=[] )
 
 
 @app.route('/viewlisting')
