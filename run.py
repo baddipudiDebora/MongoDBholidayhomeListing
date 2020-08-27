@@ -73,12 +73,12 @@ def get_property_type():
 
 @app.route('/addlisting')
 def addlisting():
-    return render_template("ad-listing.html", page_title="Add Listing")
+    return render_template("Ad-listing.html", page_title="Add Listing")
 
 
 @app.route('/viewlisting')
 def viewlisting():
-    return render_template("ad-listing.html", page_title="View Listing")
+    return render_template("ad-list-view.html", page_title="View Listing")
 
 
 @app.route('/userprofile')
