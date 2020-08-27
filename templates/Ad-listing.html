@@ -3,7 +3,7 @@
 <body class="body-wrapper">
   <section class="ad-post bg-gray py-5">
     <div class="container">
-      <form action="#">
+      <form action="{{ url_for('addlisting') }}" method="POST" >
         <!-- Post Your ad start -->
         <fieldset class="border border-gary p-4 mb-5">
           <div class="row">
@@ -168,7 +168,7 @@
             >
           </label>
         </div>
-        <button type="submit" class="btn btn-primary d-block mt-2">
+        <button type="Add Property to Listing" class="btn btn-primary d-block mt-2">
           Post Your Ad
         </button>
       </form>
@@ -179,21 +179,21 @@
 =============================-->
 
   <!-- JAVASCRIPTS -->
-  <script src="plugins/jQuery/jquery.min.js"></script>
-  <script src="plugins/bootstrap/js/popper.min.js"></script>
-  <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
-  <script src="plugins/bootstrap/js/bootstrap-slider.js"></script>
+  <script src="static/plugins/jQuery/jquery.min.js"></script>
+  <script src="static/plugins/bootstrap/js/popper.min.js"></script>
+  <script src="static/plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script src="static/plugins/bootstrap/js/bootstrap-slider.js"></script>
   <!-- tether js -->
-  <script src="plugins/tether/js/tether.min.js"></script>
-  <script src="plugins/raty/jquery.raty-fa.js"></script>
-  <script src="plugins/slick-carousel/slick/slick.min.js"></script>
-  <script src="plugins/jquery-nice-select/js/jquery.nice-select.min.js"></script>
-  <script src="plugins/fancybox/jquery.fancybox.pack.js"></script>
-  <script src="plugins/smoothscroll/SmoothScroll.min.js"></script>
+  <script src="static/plugins/tether/js/tether.min.js"></script>
+  <script src="static/plugins/raty/jquery.raty-fa.js"></script>
+  <script src="static/plugins/slick-carousel/slick/slick.min.js"></script>
+  <script src="static/plugins/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+  <script src="static/plugins/fancybox/jquery.fancybox.pack.js"></script>
+  <script src="static/plugins/smoothscroll/SmoothScroll.min.js"></script>
   <!-- google map -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcABaamniA6OL5YvYSpB3pFMNrXwXnLwU&libraries=places"></script>
-  <script src="plugins/google-map/gmap.js"></script>
-  <script src="js/script.js"></script>
+  <script src="static/plugins/google-map/gmap.js"></script>
+  <script src="static/js/script.js"></script>
 
   {% endblock %}
 </body>

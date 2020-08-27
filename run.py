@@ -77,7 +77,9 @@ def get_property_type():
 
 @app.route('/addlisting')
 def addlisting():
-    return render_template("Ad-listing.html", listings=mongo.db.listingsAndReviews.find(), new_list=[])
+    listings=mongo.db.listingsAndReviews.find()
+    listings.insert_one(request.form.to_dict())
+    return render_template("Ad-listing.html", new_list=[])
 
 
 @app.route('/viewlisting')
