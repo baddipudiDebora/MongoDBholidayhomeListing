@@ -36,61 +36,7 @@
 					
 				</div>
              
-				<!-- Advance Search -->
-				<div class="advance-search">
-						<div class="container">
-							<div class="row justify-content-center">
-								<div class="col-lg-12 col-md-12 align-content-center">
-										<form action="{{url_for('index')}}">
-											<div class="form-row">
-                                            <div class="form-group col-md-3">
-													<select name="property_type" class="w-100 form-control mt-lg-1 mt-md-2">
-                                                        <option value="" disabled selected>Choose property type</option>
-                                                            {% for list in listings %}
-                                                                {% if list.property_type not in new_list %}
-                                                                    <option value="{{list.property_type}}">{{list.property_type}}</option>
-                                                                    {{ new_list.append(list.property_type) }}
-                                                                    {% print(new_list) %}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            </select>
-												</div>
-                                                <div class="form-group col-md-3">
-													<select id="listingsAndReviews" class="w-100 form-control mt-lg-1 mt-md-2 property_type">
-														 
-                                                            <option value="" disabled selected>Choose Country</option>
-                                                            {% for list in listings %}
-                                                                {% if list.address.country not in new_country %}
-                                                                    <option value="{{list.address.country}}">{{list.address.country}}</option>
-                                                                    {{ new_list.append(list.address.country) }}
-                                                                    {% print(new_country) %}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            </select>
 
-												</div>
-												
-												<div class="form-group col-md-3">
-														<select class="w-100 form-control mt-lg-1 mt-md-2">
-														   <option value="" disabled selected>Choose Suburb </option>
-                                                           {% for list in listings %}
-                                                                {% if list.address.suburb not in new_suburb %}
-                                                                    <option value="{{list.address.suburb}}">{{list.address.suburb}}</option>
-                                                                    {{ new_list.append(list.address.suburb) }}
-                                                                    {% print(new_suburb) %}
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            </select>
-												</div>
-												<div class="form-group col-md-2 align-self-center">
-													<button type="submit" class="btn btn-primary">Search Now</button>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-					</div>
-				</div>
 				
 			</div>
 		</div>

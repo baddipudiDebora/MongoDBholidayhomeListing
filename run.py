@@ -77,7 +77,7 @@ def addlisting():
 
 @app.route('/adlistingform', methods=['POST'])
 def adlistingform():
-    listings=mongo.db.listingsAndReviews
+    listings = mongo.db.listingsAndReviews
     listings.insert_one(request.form.to_dict())
     return redirect(url_for('viewlisting'))
 
