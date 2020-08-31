@@ -87,6 +87,17 @@ def viewlisting():
     return render_template("ad-list-view.html",listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], page_title="View Listing")
 
 
+@app.route('/edit_listing/<listing_id>')
+def edit_listing(listing_id):
+    the_listing = mongo.db.listingsAndReviews.find_one({"_id": ObjectId(listing_id)})
+    return render_template('Ad-listing.html', list=the_listing)
+
+
+@app.route('/delete_listing')
+def delete_listing():
+    return render_template('index.html')
+
+
 @app.route('/userprofile')
 def userprofile():
     return render_template("user-profile.html", page_title="Shop Online")

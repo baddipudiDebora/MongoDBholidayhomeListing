@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% block content %}
-<h3>Add Listing</h3>
+<h3>Edit Listing</h3>
 <body class="body-wrapper">
 	<section class="ad-post bg-gray py-5">
 		<div class="container">
-			<form action="{{ url_for('adlistingform') }}" method="POST">
+			  <form action="{{ url_for('edit_listing', listing_id=list._id) }}" method="POST"  class="col s12">
 				<!-- Post Your ad start -->
 				<fieldset class="border border-gary p-4 mb-5">
 					<div class="row">

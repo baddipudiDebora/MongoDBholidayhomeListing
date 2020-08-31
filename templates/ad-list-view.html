@@ -23,18 +23,18 @@
 									</a>
 
 								</div>
-						<div class="row p-lg-3 p-sm-5 p-4">
-                        		
-						<button type="edit" class="btn btn-primary d-block mt-2 btn-small">Edit you Ad</button>
-                        
-                        <button type="display" class="btn btn-primary d-block mt-2 btn-small">Delete you Ad</button>
-                       
-						</div>
-                        <br>
+								<div class="row p-lg-3 p-sm-5 p-4">
+
+									<a  href="{{ url_for('edit_listing', listing_id=list._id) }}" class="btn btn-primary d-block mt-2 btn-small">Edit you Ad</a>
+
+									<a  href="{{ url_for('delete_listing') }}"  class="btn btn-primary d-block mt-2 btn-small">Delete you Ad</a>
+
+								</div>
+								<br>
                                             {% endfor %}
                                     	</div>
-						
-       
+
+
 							</div>
 
 
