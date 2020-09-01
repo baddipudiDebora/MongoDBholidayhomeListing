@@ -96,7 +96,7 @@ def edit_listing(listing_id):
 @app.route('/update_listing/<listing_id>', methods=["POST"])
 def update_listing(listing_id):
     listingsAndReviews = mongo.db.listingsAndReviews
-    listingsAndReviews.update( {'_id': ObjectId(listing_id)},
+    listingsAndReviews.update({'_id': ObjectId(listing_id)},
     {
         'name': request.form.get('name'),
         'summary': request.form.get('category_name'),
@@ -108,12 +108,14 @@ def update_listing(listing_id):
         'host_name': request.form.get('host_name'),
         'host_location': request.form.get('host_location')
     })
-    return render_template('viewlisting')
+    return redirect(url_for('viewlisting'))
 
 
-@app.route('/delete_listing')
-def delete_listing():
-    return render_template('index.html')
+@app.route('/delete_listing/<listing_id>')
+def delete_listing(listing_id):
+    listingsAndReviews = mongo.db.listingsAndReviews
+    listingsAndReviews.remove({'_id': ObjectId(listing_id)})
+    return redirect(url_for('viewlisting'))
 
 
 @app.route('/userprofile')
