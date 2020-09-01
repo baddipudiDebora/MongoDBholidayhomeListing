@@ -90,7 +90,25 @@ def viewlisting():
 @app.route('/edit_listing/<listing_id>')
 def edit_listing(listing_id):
     the_listing = mongo.db.listingsAndReviews.find_one({"_id": ObjectId(listing_id)})
-    return render_template('Ad-listing.html', list=the_listing)
+    return render_template('edit_listing.html', list=the_listing)
+
+
+@app.route('/update_listing/<listing_id>', methods=["POST"])
+def update_listing(listing_id):
+    listingsAndReviews = mongo.db.listingsAndReviews
+    listingsAndReviews.update( {'_id': ObjectId(listing_id)},
+    {
+        'name': request.form.get('name'),
+        'summary': request.form.get('category_name'),
+        'room_type': request.form.get('room_type'),
+        'accommodates': request.form.get('accommodates'),
+        'minimum_nights': request.form.get('minimum_nights'),
+        'price': request.form.get('price'),
+        'images_picture_url': request.form.get('images_picture_url'),
+        'host_name': request.form.get('host_name'),
+        'host_location': request.form.get('host_location')
+    })
+    return render_template('viewlisting')
 
 
 @app.route('/delete_listing')
