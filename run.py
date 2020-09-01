@@ -59,7 +59,7 @@ def register():
             users.insert(
                 {'name': request.form['username'], 'password': hashpass})
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
         return 'That username already exists!'
     return render_template('register.html')
 
@@ -109,7 +109,7 @@ def update_listing(listing_id):
         'host_location': request.form.get('host_location')
     })
     return redirect(url_for('viewlisting'))
-
+    
 
 @app.route('/delete_listing/<listing_id>')
 def delete_listing(listing_id):
