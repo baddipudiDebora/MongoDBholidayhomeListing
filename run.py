@@ -20,7 +20,6 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
-
     return render_template("index.html", listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], new_suburb=[])
 
 
@@ -80,6 +79,13 @@ def adlistingform():
     listings = mongo.db.listingsAndReviews
     listings.insert_one(request.form.to_dict())
     return redirect(url_for('viewlisting'))
+
+
+@app.route('/emailenquiry', methods=['POST'])
+def emailenquiry():
+    enquiry = mongo.db.emailenquiry
+    enquiry.insert_one(request.form.to_dict())
+    return render_template('index.html')
 
 
 @app.route('/viewlisting')
