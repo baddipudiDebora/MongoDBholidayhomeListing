@@ -105,9 +105,11 @@ def update_listing(listing_id):
     listingsAndReviews.update({'_id': ObjectId(listing_id)},
     {
         'name': request.form.get('name'),
-        'summary': request.form.get('category_name'),
+        'summary': request.form.get('summary'),
         'room_type': request.form.get('room_type'),
         'accommodates': request.form.get('accommodates'),
+        'property_type': request.form.get('property_type'),
+        'listing_url': request.form.get('listing_url'),
         'minimum_nights': request.form.get('minimum_nights'),
         'price': request.form.get('price'),
         'images_picture_url': request.form.get('images_picture_url'),
@@ -115,7 +117,7 @@ def update_listing(listing_id):
         'host_location': request.form.get('host_location')
     })
     return redirect(url_for('viewlisting'))
-    
+
 
 @app.route('/delete_listing/<listing_id>')
 def delete_listing(listing_id):
