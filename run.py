@@ -4,19 +4,26 @@ from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 
-# Secret key configuration for sessions
+# Config
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback_default_secret")
 
-# Ensure serverSelectionTimeoutMS is set to prevent Vercel 30s function hangs
+# Ensure timeout parameter is attached
 mongo_uri = os.environ.get("MONGO_URI", "")
 if mongo_uri and "serverSelectionTimeoutMS" not in mongo_uri:
     separator = "&" if "?" in mongo_uri else "?"
     mongo_uri += f"{separator}serverSelectionTimeoutMS=5000"
 
 app.config["MONGO_URI"] = mongo_uri
-mongo = PyMongo(app)
 
-# Standard App Routes
+# Initialize PyMongo without binding application context immediately
+mongo = PyMongo()
+
+def get_db():
+    if "db" not in mongo.__dict__ or mongo.db is None:
+        mongo.init_app(app)
+    return mongo.db
+
+# Routes
 @app.route("/")
 @app.route("/index")
 def index():
@@ -24,8 +31,12 @@ def index():
 
 @app.route("/viewlisting")
 def view_listing():
-    # Example collection fetch
-    listings = list(mongo.db.listings.find()) if mongo.db else []
+    try:
+        db = get_db()
+        listings = list(db.listings.find()) if db is not None else []
+    except Exception as e:
+        print(f"Database error: {e}")
+        listings = []
     return render_template("ad-list-view.html", listings=listings)
 
 if __name__ == "__main__":
