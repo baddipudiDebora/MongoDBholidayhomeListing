@@ -7,7 +7,7 @@ app = Flask(__name__)
 # Secret key configuration for Flask sessions
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback_default_secret")
 
-# Ensure timeout parameter is present to prevent Vercel 30s hangs
+# Ensure serverSelectionTimeoutMS is set to prevent Vercel 30s hangs
 mongo_uri = os.environ.get("MONGO_URI", "")
 if mongo_uri and "serverSelectionTimeoutMS" not in mongo_uri:
     separator = "&" if "?" in mongo_uri else "?"
@@ -17,6 +17,7 @@ app.config["MONGO_URI"] = mongo_uri
 
 # Instantiate PyMongo lazily to prevent crashing during module import
 mongo = PyMongo()
+
 
 def get_db():
     """Safely initialize and return the MongoDB instance on request."""
@@ -41,8 +42,9 @@ def index():
         return f"<h1>Template Error</h1><p>{e}</p>", 500
 
 
+# Endpoint defined as 'viewlisting' to match url_for('viewlisting') in templates
 @app.route("/viewlisting")
-def view_listing():
+def viewlisting():
     try:
         db = get_db()
         listings = list(db.listings.find()) if db is not None else []
@@ -50,6 +52,29 @@ def view_listing():
     except Exception as e:
         print(f"Error on viewlisting route: {e}")
         return f"<h1>Error loading listings</h1><p>{e}</p>", 500
+
+
+# Route alias to prevent BuildError if url_for('view_listing') is called
+@app.route("/view_listing")
+def view_listing():
+    return viewlisting()
+
+
+# Placeholder routes to satisfy url_for('about') and url_for('contact') in base.html
+@app.route("/about")
+def about():
+    try:
+        return render_template("about.html")
+    except Exception:
+        return render_template("index.html")
+
+
+@app.route("/contact")
+def contact():
+    try:
+        return render_template("contact.html")
+    except Exception:
+        return render_template("index.html")
 
 
 if __name__ == "__main__":
