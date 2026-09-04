@@ -1,2 +1,13 @@
+[project]
+name = "mongo-d-bholidayhome-listing"
+version = "0.1.0"
+dependencies = [
+    "Flask==2.2.5",
+    "Flask-PyMongo==2.3.0",
+    "pymongo[srv]==3.12.3",
+    "dnspython==2.6.1",
+    "bcrypt==4.1.2"
+]
+
 [tool.vercel]
 entrypoint = "run.py"
