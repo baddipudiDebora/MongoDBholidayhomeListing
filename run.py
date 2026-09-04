@@ -61,6 +61,20 @@ def view_listing():
     return viewlisting()
 
 
+# Fix for 'addlisting' BuildError
+@app.route("/addlisting")
+def addlisting():
+    try:
+        return render_template("ad-listing.html")
+    except Exception:
+        return render_template("index.html")
+
+
+@app.route("/add_listing")
+def add_listing():
+    return addlisting()
+
+
 @app.route("/about")
 def about():
     try:
