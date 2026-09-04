@@ -61,7 +61,6 @@ def view_listing():
     return viewlisting()
 
 
-# Fix for 'addlisting' BuildError
 @app.route("/addlisting")
 def addlisting():
     try:
@@ -75,6 +74,37 @@ def add_listing():
     return addlisting()
 
 
+# Auth & User Account Placeholders to fix template BuildErrors
+@app.route("/login")
+def login():
+    try:
+        return render_template("login.html")
+    except Exception:
+        return render_template("index.html")
+
+
+@app.route("/logout")
+def logout():
+    return render_template("index.html")
+
+
+@app.route("/register")
+def register():
+    try:
+        return render_template("register.html")
+    except Exception:
+        return render_template("index.html")
+
+
+@app.route("/profile")
+def profile():
+    try:
+        return render_template("user-profile.html")
+    except Exception:
+        return render_template("index.html")
+
+
+# General Nav Placeholders
 @app.route("/about")
 def about():
     try:
