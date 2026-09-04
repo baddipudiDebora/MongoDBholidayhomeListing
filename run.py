@@ -1,4 +1,5 @@
 import os
+import traceback
 from flask import Flask, render_template
 from flask_pymongo import PyMongo
 
@@ -38,11 +39,11 @@ def index():
         listings = list(db.listings.find()) if db is not None else []
         return render_template("index.html", listings=listings)
     except Exception as e:
-        print(f"Template rendering error on index: {e}")
-        return f"<h1>Template Error</h1><p>{e}</p>", 500
+        error_details = traceback.format_exc()
+        print(f"Template rendering error on index:\n{error_details}")
+        return f"<h1>Template Rendering Error</h1><pre>{error_details}</pre>", 500
 
 
-# Endpoint defined as 'viewlisting' to match url_for('viewlisting') in templates
 @app.route("/viewlisting")
 def viewlisting():
     try:
@@ -50,17 +51,16 @@ def viewlisting():
         listings = list(db.listings.find()) if db is not None else []
         return render_template("ad-list-view.html", listings=listings)
     except Exception as e:
-        print(f"Error on viewlisting route: {e}")
-        return f"<h1>Error loading listings</h1><p>{e}</p>", 500
+        error_details = traceback.format_exc()
+        print(f"Error on viewlisting route:\n{error_details}")
+        return f"<h1>Error loading listings</h1><pre>{error_details}</pre>", 500
 
 
-# Route alias to prevent BuildError if url_for('view_listing') is called
 @app.route("/view_listing")
 def view_listing():
     return viewlisting()
 
 
-# Placeholder routes to satisfy url_for('about') and url_for('contact') in base.html
 @app.route("/about")
 def about():
     try:
