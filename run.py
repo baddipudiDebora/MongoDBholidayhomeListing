@@ -1,21 +1,26 @@
-import json
 import os
-from flask import Flask, render_template, url_for, request, session, redirect
+import json
 from datetime import datetime
-from flask import Flask, json, redirect, render_template, request, session, url_for, flash, g
+
+# DNS Patch: Overrides default system DNS with Google Public DNS to bypass SRV timeouts
+import dns.resolver
+dns.resolver.default_resolver = dns.resolver.Resolver(configure=False)
+dns.resolver.default_resolver.nameservers = ['8.8.8.8', '8.8.4.4']
+
+from flask import Flask, render_template, url_for, request, session, redirect, flash, g
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import bcrypt
 
 app = Flask(__name__)
-app.secret_key = "randomstring123"
-messages = []
 
-
-app.config["MONGO_DBNAME"] = 'sample_airbnb_reservation'
-app.config["MONGO_URI"] = 'mongodb+srv://root:RootUser@cluster0.yvawf.mongodb.net/sample_airbnb_reservation?retryWrites=true&w=majority'
+# Load configurations from environment (.env) with fallbacks
+app.secret_key = os.environ.get("SECRET_KEY", "randomstring123")
+app.config["MONGO_DBNAME"] = 'holidayhome'
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb+srv://deborahbaddipudi:Wishfor2027@cluster0.7biqgqm.mongodb.net/holidayhome?retryWrites=true&w=majority")
 
 mongo = PyMongo(app)
+messages = []
 
 
 @app.route('/')
@@ -55,7 +60,7 @@ def register():
         if existing_user is None:
             hashpass = bcrypt.hashpw(
                 request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert(
+            users.insert_one(
                 {'name': request.form['username'], 'password': hashpass})
             session['username'] = request.form['username']
             return redirect(url_for('login'))
@@ -71,7 +76,7 @@ def get_property_type():
 
 @app.route('/addlisting')
 def addlisting():
-    return render_template("Ad-listing.html", listings=mongo.db.listingsAndReviews.find(),new_list=[])
+    return render_template("Ad-listing.html", listings=mongo.db.listingsAndReviews.find(), new_list=[])
 
 
 @app.route('/adlistingform', methods=['POST'])
@@ -90,7 +95,7 @@ def emailenquiry():
 
 @app.route('/viewlisting')
 def viewlisting():
-    return render_template("ad-list-view.html",listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], page_title="View Listing")
+    return render_template("ad-list-view.html", listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], page_title="View Listing")
 
 
 @app.route('/edit_listing/<listing_id>')
@@ -102,8 +107,8 @@ def edit_listing(listing_id):
 @app.route('/update_listing/<listing_id>', methods=["POST"])
 def update_listing(listing_id):
     listingsAndReviews = mongo.db.listingsAndReviews
-    listingsAndReviews.update({'_id': ObjectId(listing_id)},
-    {
+    listingsAndReviews.update_one({'_id': ObjectId(listing_id)},
+    {'$set': {
         'name': request.form.get('name'),
         'summary': request.form.get('summary'),
         'room_type': request.form.get('room_type'),
@@ -115,14 +120,14 @@ def update_listing(listing_id):
         'images_picture_url': request.form.get('images_picture_url'),
         'host_name': request.form.get('host_name'),
         'host_location': request.form.get('host_location')
-    })
+    }})
     return redirect(url_for('viewlisting'))
 
 
 @app.route('/delete_listing/<listing_id>')
 def delete_listing(listing_id):
     listingsAndReviews = mongo.db.listingsAndReviews
-    listingsAndReviews.remove({'_id': ObjectId(listing_id)})
+    listingsAndReviews.delete_one({'_id': ObjectId(listing_id)})
     return redirect(url_for('viewlisting'))
 
 
@@ -132,6 +137,6 @@ def userprofile():
 
 
 if __name__ == '__main__':
-    app.run(host=os.environ.get('IP'),
-            port=int(os.environ.get('PORT')),
-            debug=True)
+    host = os.environ.get('IP', '127.0.0.1')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host=host, port=port, debug=True)
