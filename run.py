@@ -1,142 +1,32 @@
 import os
-import json
-from datetime import datetime
-
-# DNS Patch: Overrides default system DNS with Google Public DNS to bypass SRV timeouts
-import dns.resolver
-dns.resolver.default_resolver = dns.resolver.Resolver(configure=False)
-dns.resolver.default_resolver.nameservers = ['8.8.8.8', '8.8.4.4']
-
-from flask import Flask, render_template, url_for, request, session, redirect, flash, g
+from flask import Flask, render_template
 from flask_pymongo import PyMongo
-from bson.objectid import ObjectId
-import bcrypt
 
 app = Flask(__name__)
 
-# Load configurations from environment (.env) with fallbacks
-app.secret_key = os.environ.get("SECRET_KEY", "randomstring123")
-app.config["MONGO_DBNAME"] = 'holidayhome'
-app.config["MONGO_URI"] = os.environ.get("MONGO_URI", "mongodb+srv://deborahbaddipudi:Wishfor2027@cluster0.7biqgqm.mongodb.net/holidayhome?retryWrites=true&w=majority")
+# Secret key configuration for sessions
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "fallback_default_secret")
 
+# Ensure serverSelectionTimeoutMS is set to prevent Vercel 30s function hangs
+mongo_uri = os.environ.get("MONGO_URI", "")
+if mongo_uri and "serverSelectionTimeoutMS" not in mongo_uri:
+    separator = "&" if "?" in mongo_uri else "?"
+    mongo_uri += f"{separator}serverSelectionTimeoutMS=5000"
+
+app.config["MONGO_URI"] = mongo_uri
 mongo = PyMongo(app)
-messages = []
 
-
-@app.route('/')
+# Standard App Routes
+@app.route("/")
+@app.route("/index")
 def index():
-    return render_template("index.html", listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], new_suburb=[])
+    return render_template("index.html")
 
+@app.route("/viewlisting")
+def view_listing():
+    # Example collection fetch
+    listings = list(mongo.db.listings.find()) if mongo.db else []
+    return render_template("ad-list-view.html", listings=listings)
 
-@app.route('/about')
-def about():
-    return render_template("about-us.html", page_title="Shop Online")
-
-
-@app.route('/contact')
-def contact():
-    return render_template("contact-us.html", page_title="Shop Online")
-
-
-@app.route('/login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        users = mongo.db.users
-        login_user = users.find_one({'name': request.form['username']})
-        if login_user:
-            if bcrypt.hashpw(request.form['pass'].encode('utf-8'), login_user['password']) == login_user['password']:
-                session['username'] = request.form['username']
-                return redirect(url_for('viewlisting'))
-        return 'Invalid username/password combination'
-    return render_template('login.html')
-
-
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-    if request.method == 'POST':
-        users = mongo.db.users
-        existing_user = users.find_one({'name': request.form['username']})
-
-        if existing_user is None:
-            hashpass = bcrypt.hashpw(
-                request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert_one(
-                {'name': request.form['username'], 'password': hashpass})
-            session['username'] = request.form['username']
-            return redirect(url_for('login'))
-        return 'That username already exists!'
-    return render_template('register.html')
-
-
-@app.route('/get_property_type')
-def get_property_type():
-    return render_template('get_property_type.html',
-                           get_property_type=mongo.db.property_type.find())
-
-
-@app.route('/addlisting')
-def addlisting():
-    return render_template("Ad-listing.html", listings=mongo.db.listingsAndReviews.find(), new_list=[])
-
-
-@app.route('/adlistingform', methods=['POST'])
-def adlistingform():
-    listings = mongo.db.listingsAndReviews
-    listings.insert_one(request.form.to_dict())
-    return redirect(url_for('viewlisting'))
-
-
-@app.route('/emailenquiry', methods=['POST'])
-def emailenquiry():
-    enquiry = mongo.db.emailenquiry
-    enquiry.insert_one(request.form.to_dict())
-    return render_template('index.html')
-
-
-@app.route('/viewlisting')
-def viewlisting():
-    return render_template("ad-list-view.html", listings=mongo.db.listingsAndReviews.find(), new_list=[], new_country=[], page_title="View Listing")
-
-
-@app.route('/edit_listing/<listing_id>')
-def edit_listing(listing_id):
-    the_listing = mongo.db.listingsAndReviews.find_one({"_id": ObjectId(listing_id)})
-    return render_template('edit_listing.html', list=the_listing)
-
-
-@app.route('/update_listing/<listing_id>', methods=["POST"])
-def update_listing(listing_id):
-    listingsAndReviews = mongo.db.listingsAndReviews
-    listingsAndReviews.update_one({'_id': ObjectId(listing_id)},
-    {'$set': {
-        'name': request.form.get('name'),
-        'summary': request.form.get('summary'),
-        'room_type': request.form.get('room_type'),
-        'accommodates': request.form.get('accommodates'),
-        'property_type': request.form.get('property_type'),
-        'listing_url': request.form.get('listing_url'),
-        'minimum_nights': request.form.get('minimum_nights'),
-        'price': request.form.get('price'),
-        'images_picture_url': request.form.get('images_picture_url'),
-        'host_name': request.form.get('host_name'),
-        'host_location': request.form.get('host_location')
-    }})
-    return redirect(url_for('viewlisting'))
-
-
-@app.route('/delete_listing/<listing_id>')
-def delete_listing(listing_id):
-    listingsAndReviews = mongo.db.listingsAndReviews
-    listingsAndReviews.delete_one({'_id': ObjectId(listing_id)})
-    return redirect(url_for('viewlisting'))
-
-
-@app.route('/userprofile')
-def userprofile():
-    return render_template("user-profile.html", page_title="Shop Online")
-
-
-if __name__ == '__main__':
-    host = os.environ.get('IP', '127.0.0.1')
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host=host, port=port, debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
